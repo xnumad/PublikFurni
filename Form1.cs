@@ -25,7 +25,7 @@ namespace PublikFurni
 {
     [Module("PublikFurni", "Room furni stealer!")]
     [GitHub("TheAmazingAussie", "PublikFurni")]
-    [Author("Alex", HabboName = "winterpar1", Hotel = Sulakore.Habbo.HHotel.Com, ResourceName = "Follow on Twitter", ResourceUrl = "https://twitter.com/AmazingAussie")]
+    [Author("Alex", HabboName = "", Hotel = Sulakore.Habbo.HHotel.Com, ResourceName = "Follow on Twitter", ResourceUrl = "https://twitter.com/AmazingAussie")]
 
     public partial class Form1 : ExtensionForm
     {
