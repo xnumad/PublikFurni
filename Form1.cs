@@ -121,19 +121,19 @@ namespace PublikFurni
 
                 obj.Packet.ReadString(); // Unknown??
 
-                int extraDataVariable = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
-                item.extraDataVariable = extraDataVariable;
+                int extraDataPerspective = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
+                item.extraDataVariable = extraDataPerspective;
 
-                int importantShit = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
-                item.extraDataId = importantShit;
+                int extraDataType = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
+                item.extraDataId = extraDataType;
 
-                if (importantShit == 0)
+                if (extraDataType == 0)
                 {
                     string extraDataString = obj.Packet.ReadString();
                     item.extraDataString = extraDataString;
                 }
 
-                if (importantShit == 2) // String array
+                if (extraDataType == 2) // String array
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
@@ -145,7 +145,7 @@ namespace PublikFurni
                     }
                 }
 
-                if (importantShit == 1) // Key value
+                if (extraDataType == 1) // Key value
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.keyValue = new List<String>();
@@ -160,7 +160,7 @@ namespace PublikFurni
                     }
                 }
 
-                if (importantShit == 5) // Integer array
+                if (extraDataType == 5) // Integer array
                 {
                     int integers = obj.Packet.ReadInteger();
                     item.ints = new List<int>();
