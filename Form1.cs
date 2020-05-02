@@ -144,14 +144,18 @@ namespace PublikFurni
                 Log("Item #" + i + ".extraDataType=" + extraDataType);
                 item.extraDataId = extraDataType;
 
-                if (extraDataType == 0) // String
+                //https://github.com/JasonWibbo/HabboSwfOpenSource/tree/master/src/com/sulake/habbo/room/object/data
+                //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as
+                //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/IStuffData.as
+
+                if (extraDataType == 0) // String //Legacy //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/LegacyStuffData.as#L15
                 {
                     string extraDataString = obj.Packet.ReadString();
                     Log("Item #" + i + ".extraDataString=" + extraDataString);
                     item.extraDataString = extraDataString;
                 }
 
-                else if (extraDataType == 1) // Key value
+                else if (extraDataType == 1) // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
                 {
                     int strings = obj.Packet.ReadInteger();
                     Log("Item #" + i + ".strings=" + strings);
@@ -169,7 +173,7 @@ namespace PublikFurni
                     }
                 }
 
-                else if (extraDataType == 2) // String array
+                else if (extraDataType == 2) // String array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StringArrayStuffData.as
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
@@ -183,7 +187,20 @@ namespace PublikFurni
                     }
                 }
 
-                else if (extraDataType == 5) // Integer array
+                else if (extraDataType == 3) //VoteResult //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/VoteResultStuffData.as#L20
+                {
+                    string state = obj.Packet.ReadString();
+                    Log("Item #" + i + ".state=" + state);
+                    item.state = state;
+
+                    int result = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".result=" + result);
+                    item.result = result;
+                }
+
+                else if (extraDataType == 4) { } //Empty //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/EmptyStuffData.as#L10
+
+                else if (extraDataType == 5) // Integer array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/IntArrayStuffData.as#L22
                 {
                     int integers = obj.Packet.ReadInteger();
                     Log("Item #" + i + ".integers=" + integers);
@@ -197,7 +214,52 @@ namespace PublikFurni
                     }
                 }
 
-                else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and I don't know how to read this type yet.");
+                else if (extraDataType == 6) //high score //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/HighScoreStuffData.as
+                {
+                    item.state = obj.Packet.ReadString();
+                    item.scoretype = obj.Packet.ReadInteger();
+                    item.clearType = obj.Packet.ReadInteger();
+
+                    int amountScores = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".scores=" + amountScores);
+                    item.scores = new List<dynamic>();
+
+                    for (int k = 0; k < amountScores; k++)
+                    {
+                        dynamic scoreData = new ExpandoObject();
+                        Log("Score #" + k);
+
+                        scoreData.score = obj.Packet.ReadInteger();
+                        Log("Score #" + k + ".score=" + scoreData.score);
+
+                        int amountUsers = obj.Packet.ReadInteger();
+                        Log("Score #" + k + ".players=" + amountUsers);
+                        scoreData.users = new List<String>();
+
+                        for (int l = 0; l < amountUsers; l++)
+                        {
+                            string username = obj.Packet.ReadString();
+                            Log("Score #" + k + ".players[" + l + "]=" + username);
+                            scoreData.users.Add(username);
+                        }
+                        
+                        itemData.scores.Add(scoreData);
+                    }
+                }
+
+                else if (extraDataType == 7) //crackable
+                {
+                    item.state = obj.Packet.ReadString();
+                    Log("Item #" + i + ".state=" + item.state);
+
+                    item.hits = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".hits=" + item.hits);
+
+                    item.target = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".target=" + item.target);
+                }
+
+                else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and its interpretation is undefined.");
 
                 // More junk
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
