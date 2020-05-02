@@ -117,9 +117,10 @@ namespace PublikFurni
                 item.rotation = rotation;
 
                 string height = obj.Packet.ReadString(); // Height
-                item.height = height;
+                item.height = height; //z position = furniture placement
 
-                obj.Packet.ReadString(); // Unknown??
+                string sizeZ = obj.Packet.ReadString();
+                item.sizeZ = sizeZ; //z dimensions = furniture height
 
                 int extraDataPerspective = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
                 item.extraDataVariable = extraDataPerspective;
