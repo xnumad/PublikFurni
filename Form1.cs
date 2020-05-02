@@ -176,7 +176,9 @@ namespace PublikFurni
                 // More junk
                 obj.Packet.ReadInteger();
                 obj.Packet.ReadInteger();
-                obj.Packet.ReadInteger();
+
+                int ownerId = obj.Packet.ReadInteger();
+                item.ownerId = ownerId; //Furniture owner ID
 
                 itemData.items.Add(item);
             }
