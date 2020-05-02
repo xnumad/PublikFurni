@@ -80,7 +80,7 @@ namespace PublikFurni
             Log("Got room objects packet");
 
             int owners = obj.Packet.ReadInteger();
-            Log("Owners:" + owners);
+            Log("Owners: " + owners);
             itemData.owners = new List<dynamic>();
 
             for (int i = 0; i < owners; i++) //in a group room, group admins count as "room owners" here
@@ -100,7 +100,7 @@ namespace PublikFurni
             }
 
             int items = obj.Packet.ReadInteger();
-            Log("Items:" + items);
+            Log("Items: " + items);
             itemData.items = new List<dynamic>();
 
             for (int i = 0; i < items; i++)
@@ -158,7 +158,7 @@ namespace PublikFurni
                 else if (extraDataType == 1) // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
                 {
                     int strings = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".strings=" + strings);
+                    Log("Item #" + i + ".strings[].length=" + strings);
                     item.keyValue = new List<String>();
 
                     for (int j = 0; j < strings; j++)
@@ -177,7 +177,7 @@ namespace PublikFurni
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
-                    Log("Item #" + i + ".strings=" + strings);
+                    Log("Item #" + i + ".strings[].length=" + strings);
 
                     for (int j = 0; j < strings; j++)
                     {
@@ -203,7 +203,7 @@ namespace PublikFurni
                 else if (extraDataType == 5) // Integer array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/IntArrayStuffData.as#L22
                 {
                     int integers = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".integers=" + integers);
+                    Log("Item #" + i + ".integers[].length=" + integers);
                     item.ints = new List<int>();
 
                     for (int j = 0; j < integers; j++)
@@ -221,7 +221,7 @@ namespace PublikFurni
                     item.clearType = obj.Packet.ReadInteger();
 
                     int amountScores = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".scores=" + amountScores);
+                    Log("Item #" + i + ".scores[].length=" + amountScores);
                     item.scores = new List<dynamic>();
 
                     for (int k = 0; k < amountScores; k++)
