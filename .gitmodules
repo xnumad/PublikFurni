@@ -1,0 +1,3 @@
+[submodule "Tanji"]
+	path = Tanji
+	url = https://github.com/ArachisH/Tanji.git
