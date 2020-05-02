@@ -124,7 +124,7 @@ namespace PublikFurni
                 Log("Item #" + i + ".y=" + y);
                 item.y = y;
 
-                int rotation = obj.Packet.ReadInteger(); // Rotation
+                int rotation = obj.Packet.ReadInteger(); // Rotation //Direction
                 Log("Item #" + i + ".rotation=" + rotation);
                 item.rotation = rotation;
 
@@ -203,6 +203,7 @@ namespace PublikFurni
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
                 item.rentTimeSecondsLeft = rentTimeSecondsLeft;
                 Log("Item #" + i + ".rentTimeSecondsLeft=" +rentTimeSecondsLeft);
+                //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as#L506
                 //int infostand text           opens on click
                 //<0  infostand.button.buy,    catalog page
                 //>=0 infostand.button.buyout  buy window directly
