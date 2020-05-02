@@ -66,7 +66,7 @@ namespace PublikFurni
             this.CurrentRoomId = obj.Packet.ReadInteger();
             this.CurrentRoomName = obj.Packet.ReadString();
 
-            //Log("Room data ('" + CurrentRoomId + "', '" + this.CurrentRoomName + "')");
+            Log("Room data ('" + CurrentRoomId + "', '" + this.CurrentRoomName + "')");
         }
 
         /// <summary>
@@ -77,60 +77,77 @@ namespace PublikFurni
         private void HandleObjectsMessageEvent(DataInterceptedEventArgs obj)
         {
             dynamic itemData = new ExpandoObject();
+            Log("Got room objects packet");
 
             int owners = obj.Packet.ReadInteger();
+            Log("Owners:" + owners);
             itemData.owners = new List<dynamic>();
 
             for (int i = 0; i < owners; i++) //in a group room, group admins count as "room owners" here
             {
                 dynamic owner = new ExpandoObject();
+                Log("Owner #" + i);
 
                 int ownerId = obj.Packet.ReadInteger();
+                Log("Owner #" + i + ".id=" + ownerId);
                 owner.ownerId = ownerId;
 
                 string ownerName = obj.Packet.ReadString();
+                Log("Owner #" + i + ".name=" + ownerName);
                 owner.ownerName = ownerName;
 
                 itemData.owners.Add(owner);
             }
 
             int items = obj.Packet.ReadInteger();
+            Log("Items:" + items);
             itemData.items = new List<dynamic>();
 
             for (int i = 0; i < items; i++)
             {
                 dynamic item = new ExpandoObject();
+                Log("Item #" + i);
 
                 int itemId = obj.Packet.ReadInteger();
+                Log("Item #" + i + ".id=" + itemId);
                 item.id = itemId;
 
                 int spriteId = obj.Packet.ReadInteger();
+                Log("Item #" + i + ".spriteId=" + spriteId);
                 item.spriteId = spriteId;
 
                 int x = obj.Packet.ReadInteger(); // X
+                Log("Item #" + i + ".x=" + x);
                 item.x = x;
 
                 int y = obj.Packet.ReadInteger(); // Y
+                Log("Item #" + i + ".y=" + y);
                 item.y = y;
 
                 int rotation = obj.Packet.ReadInteger(); // Rotation
+                Log("Item #" + i + ".rotation=" + rotation);
                 item.rotation = rotation;
 
                 string height = obj.Packet.ReadString(); // Height
+                Log("Item #" + i + ".height=" + height);
                 item.height = height; //z position = furniture placement
 
                 string sizeZ = obj.Packet.ReadString();
+                Log("Item #" + i + ".sizeZ=" + sizeZ);
                 item.sizeZ = sizeZ; //z dimensions = furniture height
 
                 int extraDataPerspective = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
+                Log("Item #" + i + ".extraDataPerspective=" + extraDataPerspective);
                 item.extraDataVariable = extraDataPerspective;
 
                 int extraDataType = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
+                Log("Item #" + i + ".extraDataType=" + extraDataType);
                 item.extraDataId = extraDataType;
 
                 if (extraDataType == 0) // String
                 {
                     string extraDataString = obj.Packet.ReadString();
+                    Log("Item #" + i + ".extraDataString=" + extraDataString);
                     item.extraDataString = extraDataString;
                 }
 
@@ -138,10 +155,12 @@ namespace PublikFurni
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
+                    Log("Item #" + i + ".strings=" + strings);
 
                     for (int j = 0; j < strings; j++)
                     {
                         string str = obj.Packet.ReadString();
+                        Log("Item #" + i + ".strings[" + j + "]=" + str);
                         item.strings.Add(str);
                     }
                 }
@@ -149,12 +168,15 @@ namespace PublikFurni
                 if (extraDataType == 1) // Key value
                 {
                     int strings = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".strings=" + strings);
                     item.keyValue = new List<String>();
 
                     for (int j = 0; j < strings; j++)
                     {
                         string key = obj.Packet.ReadString();
+                        Log("Item #" + i + ".strings[" + j + "].key=" + key);
                         string value = obj.Packet.ReadString();
+                        Log("Item #" + i + ".strings[" + j + "].value=" + value);
 
                         item.keyValue.Add(key);
                         item.keyValue.Add(value);
@@ -164,11 +186,13 @@ namespace PublikFurni
                 if (extraDataType == 5) // Integer array
                 {
                     int integers = obj.Packet.ReadInteger();
+                    Log("Item #" + i + ".integers=" + integers);
                     item.ints = new List<int>();
 
                     for (int j = 0; j < integers; j++)
                     {
                         int number = obj.Packet.ReadInteger();
+                        Log("Item #" + i + ".integers[" + j + "]=" + number);
                         item.ints.Add(number);
                     }
                 }
@@ -176,14 +200,17 @@ namespace PublikFurni
                 // More junk
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
                 item.rentTimeSecondsLeft = rentTimeSecondsLeft;
+                Log("Item #" + i + ".rentTimeSecondsLeft=" +rentTimeSecondsLeft);
                 //int infostand text           opens on click
                 //<0  infostand.button.buy,    catalog page
                 //>=0 infostand.button.buyout  buy window directly
 
                 int amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
                 item.amountOfStates = amountOfStates;
+                Log("Item #" + i + ".amountOfStates=" + amountOfStates);
 
                 int ownerId = obj.Packet.ReadInteger();
+                Log("Item #" + i + ".ownerId=" + ownerId);
                 item.ownerId = ownerId; //Furniture owner ID
 
                 itemData.items.Add(item);
