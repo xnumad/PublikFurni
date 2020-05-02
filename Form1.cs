@@ -151,20 +151,6 @@ namespace PublikFurni
                     item.extraDataString = extraDataString;
                 }
 
-                else if (extraDataType == 2) // String array
-                {
-                    int strings = obj.Packet.ReadInteger();
-                    item.strings = new List<String>();
-                    Log("Item #" + i + ".strings=" + strings);
-
-                    for (int j = 0; j < strings; j++)
-                    {
-                        string str = obj.Packet.ReadString();
-                        Log("Item #" + i + ".strings[" + j + "]=" + str);
-                        item.strings.Add(str);
-                    }
-                }
-
                 else if (extraDataType == 1) // Key value
                 {
                     int strings = obj.Packet.ReadInteger();
@@ -180,6 +166,20 @@ namespace PublikFurni
 
                         item.keyValue.Add(key);
                         item.keyValue.Add(value);
+                    }
+                }
+
+                else if (extraDataType == 2) // String array
+                {
+                    int strings = obj.Packet.ReadInteger();
+                    item.strings = new List<String>();
+                    Log("Item #" + i + ".strings=" + strings);
+
+                    for (int j = 0; j < strings; j++)
+                    {
+                        string str = obj.Packet.ReadString();
+                        Log("Item #" + i + ".strings[" + j + "]=" + str);
+                        item.strings.Add(str);
                     }
                 }
 
