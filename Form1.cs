@@ -81,7 +81,7 @@ namespace PublikFurni
             int owners = obj.Packet.ReadInteger();
             itemData.owners = new List<dynamic>();
 
-            for (int i = 0; i < owners; i++)
+            for (int i = 0; i < owners; i++) //in a group room, group admins count as "room owners" here
             {
                 dynamic owner = new ExpandoObject();
 
@@ -127,7 +127,7 @@ namespace PublikFurni
                 int extraDataType = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
                 item.extraDataId = extraDataType;
 
-                if (extraDataType == 0)
+                if (extraDataType == 0) // String
                 {
                     string extraDataString = obj.Packet.ReadString();
                     item.extraDataString = extraDataString;
