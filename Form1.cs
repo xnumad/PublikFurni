@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Tangine.Habbo;
 using Tangine;
 
 using Sulakore.Habbo;
@@ -17,14 +16,12 @@ using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 using Sulakore.Protocol;
 using System.IO;
-using FlashInspect.ActionScript;
 using Newtonsoft.Json;
 using System.Dynamic;
 
 namespace PublikFurni
 {
     [Module("PublikFurni", "Room furni stealer!")]
-    [GitHub("TheAmazingAussie", "PublikFurni")]
     [Author("Alex", HabboName = "", Hotel = Sulakore.Habbo.HHotel.Com, ResourceName = "Follow on Twitter", ResourceUrl = "https://twitter.com/AmazingAussie")]
 
     public partial class Form1 : ExtensionForm
