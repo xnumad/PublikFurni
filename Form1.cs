@@ -151,7 +151,7 @@ namespace PublikFurni
                     item.extraDataString = extraDataString;
                 }
 
-                if (extraDataType == 2) // String array
+                else if (extraDataType == 2) // String array
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
@@ -165,7 +165,7 @@ namespace PublikFurni
                     }
                 }
 
-                if (extraDataType == 1) // Key value
+                else if (extraDataType == 1) // Key value
                 {
                     int strings = obj.Packet.ReadInteger();
                     Log("Item #" + i + ".strings=" + strings);
@@ -183,7 +183,7 @@ namespace PublikFurni
                     }
                 }
 
-                if (extraDataType == 5) // Integer array
+                else if (extraDataType == 5) // Integer array
                 {
                     int integers = obj.Packet.ReadInteger();
                     Log("Item #" + i + ".integers=" + integers);
@@ -196,6 +196,8 @@ namespace PublikFurni
                         item.ints.Add(number);
                     }
                 }
+
+                else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and I don't know how to read this type yet.");
 
                 // More junk
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
