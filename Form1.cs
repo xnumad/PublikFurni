@@ -222,7 +222,7 @@ namespace PublikFurni
 
         private void Log(Object text)
         {
-            ThreadHelperClass.SetText(this, this.textBox1, this.textBox1.Text + " [" + DateTime.Now + "] " + text.ToString() + Environment.NewLine);
+            ThreadHelperClass.SetText(this, this.textBox1, this.textBox1.Text + "[" + DateTime.Now + "] " + text.ToString() + Environment.NewLine);
         }
     }
 
