@@ -178,7 +178,7 @@ namespace PublikFurni
             }
 
             var json = JsonConvert.SerializeObject(itemData);
-            File.WriteAllText(this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json);
+            File.WriteAllText(Hotel.ToDomain() + this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json);
         }
 
         private void Log(Object text)
