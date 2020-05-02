@@ -26,8 +26,8 @@ namespace PublikFurni
 
     public partial class Form1 : ExtensionForm
     {
-        private ushort ObjectsMessageEvent = 1264;
-        private ushort RoomDataMessageEvent = 1826;
+        private ushort ObjectsMessageEvent;
+        private ushort RoomDataMessageEvent;
 
         private int CurrentRoomId;
         private string CurrentRoomName;
@@ -38,6 +38,9 @@ namespace PublikFurni
 
             try
             {
+                ObjectsMessageEvent = In.RoomFloorItems;
+                RoomDataMessageEvent = In.RoomData;
+
                 Triggers.InAttach(this.ObjectsMessageEvent, HandleObjectsMessageEvent);
                 Triggers.InAttach(this.RoomDataMessageEvent, HandleRoomDataMessageEvent);
             }
