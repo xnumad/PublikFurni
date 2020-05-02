@@ -174,8 +174,14 @@ namespace PublikFurni
                 }
 
                 // More junk
-                obj.Packet.ReadInteger();
-                obj.Packet.ReadInteger();
+                int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
+                item.rentTimeSecondsLeft = rentTimeSecondsLeft;
+                //int infostand text           opens on click
+                //<0  infostand.button.buy,    catalog page
+                //>=0 infostand.button.buyout  buy window directly
+
+                int amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
+                item.amountOfStates = amountOfStates;
 
                 int ownerId = obj.Packet.ReadInteger();
                 item.ownerId = ownerId; //Furniture owner ID
