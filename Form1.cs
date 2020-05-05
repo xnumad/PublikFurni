@@ -282,8 +282,11 @@ namespace PublikFurni
                 itemData.items.Add(item);
             }
 
+            Log("Finished with all items");
             var json = JsonConvert.SerializeObject(itemData);
             File.WriteAllText(Hotel.ToDomain() + this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json);
+            Log("Finished converting data to JSON");
+            Log("Finished writing JSON file");
         }
 
         private void Log(Object text)
