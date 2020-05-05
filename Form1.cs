@@ -284,8 +284,8 @@ namespace PublikFurni
 
             Log("Finished with all items");
             var json = JsonConvert.SerializeObject(itemData);
-            File.WriteAllText(Hotel.ToDomain() + this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json);
             Log("Finished converting data to JSON");
+            File.WriteAllText(/*Hotel.ToDomain() + */this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json); //fails if Tanji doesn't know the current hotel
             Log("Finished writing JSON file");
         }
 
