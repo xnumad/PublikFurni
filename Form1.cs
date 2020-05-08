@@ -159,7 +159,7 @@ namespace PublikFurni
                 {
                     int strings = obj.Packet.ReadInteger();
                     Log("Item #" + i + ".strings[].length=" + strings);
-                    item.keyValue = new List<String>();
+                    item.keyValue = new Dictionary<string, string>();
 
                     for (int j = 0; j < strings; j++)
                     {
@@ -168,8 +168,7 @@ namespace PublikFurni
                         string value = obj.Packet.ReadString();
                         Log("Item #" + i + ".strings[" + j + "].value=" + value);
 
-                        item.keyValue.Add(key);
-                        item.keyValue.Add(value);
+                        item.keyValue.Add(key, value);
                     }
                 }
 
