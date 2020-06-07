@@ -144,6 +144,21 @@ namespace PublikFurni
                 Log("Item #" + i + ".extraDataType=" + extraDataType);
                 item.extraDataId = extraDataType;
 
+                //4 hex nibbles store 2 values:
+                //hex nibbles 1-2 for extraDataType //https://github.com/xnumad/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as#L10
+                //hex nibbles 3-4 for LTD
+                //
+                //Example:
+                //   LTD extraDataType
+                //0x 01  03
+
+                bool LTD = false;
+                if (extraDataType > 0xFF) //LTD indication
+                {
+                    LTD = true;
+                    extraDataType &= 0xFF; //trim value for extraDataType
+                }
+
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/tree/master/src/com/sulake/habbo/room/object/data
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/IStuffData.as
@@ -259,6 +274,12 @@ namespace PublikFurni
                 }
 
                 else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and its interpretation is undefined.");
+
+                if (LTD)
+                {
+                    item.uniqueSerialNumber = obj.Packet.ReadInteger();
+                    item.uniqueSeriesSize = obj.Packet.ReadInteger();
+                }
 
                 // More junk
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
