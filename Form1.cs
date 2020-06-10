@@ -107,35 +107,18 @@ namespace PublikFurni
             {
                 dynamic item = new ExpandoObject();
 
-                int itemId = obj.Packet.ReadInteger();
-                item.id = itemId;
-
-                int spriteId = obj.Packet.ReadInteger();
-                item.spriteId = spriteId;
-
-                int x = obj.Packet.ReadInteger(); // X
-                item.x = x;
-
-                int y = obj.Packet.ReadInteger(); // Y
-                item.y = y;
-
-                int rotation = obj.Packet.ReadInteger(); // Rotation //Direction
-                item.rotation = rotation;
-
-                string height = obj.Packet.ReadString(); // Height
-                item.height = height; //z position = furniture placement
-
-                string sizeZ = obj.Packet.ReadString();
-                item.sizeZ = sizeZ; //z dimensions = furniture height
-
-                int extraDataPerspective = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
-                item.extraDataVariable = extraDataPerspective;
-
-                int extraDataType = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
-                item.extraDataId = extraDataType;
+                item.id = obj.Packet.ReadInteger();
+                item.spriteId = obj.Packet.ReadInteger();
+                item.x = obj.Packet.ReadInteger();
+                item.y = obj.Packet.ReadInteger();
+                item.dir = obj.Packet.ReadInteger();
+                item.z = obj.Packet.ReadString(); //z position = furniture placement height
+                item.sizeZ = obj.Packet.ReadString(); //z dimensions = furniture height
+                item.extra = obj.Packet.ReadInteger();
+                item.data = obj.Packet.ReadInteger();
 
                 //4 hex nibbles store 2 values:
-                //hex nibbles 1-2 for extraDataType //https://github.com/xnumad/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as#L10
+                //hex nibbles 1-2 for item.data //https://github.com/xnumad/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as#L10
                 //hex nibbles 3-4 for LTD
                 //
                 //Example:
@@ -143,110 +126,87 @@ namespace PublikFurni
                 //0x 01  03
 
                 bool LTD = false;
-                if (extraDataType > 0xFF) //LTD indication
+                if (item.data > 0xFF) //LTD indication
                 {
                     LTD = true;
-                    extraDataType &= 0xFF; //trim value for extraDataType
+                    item.data &= 0xFF; //trim value for item.data
                 }
 
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/tree/master/src/com/sulake/habbo/room/object/data
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StuffDataFactory.as
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/IStuffData.as
 
-                if (extraDataType == 0) // String //Legacy //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/LegacyStuffData.as#L15
+                switch (item.data)
                 {
-                    string extraDataString = obj.Packet.ReadString();
-                    item.extraDataString = extraDataString;
-                }
+                    case 0: // String //Legacy //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/LegacyStuffData.as#L15
+                        item.state = obj.Packet.ReadString();
+                        break;
+                    case 1: // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
+                        int strings = obj.Packet.ReadInteger();
+                        item.keyValue = new Dictionary<string, string>();
 
-                else if (extraDataType == 1) // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
-                {
-                    int strings = obj.Packet.ReadInteger();
-                    item.keyValue = new Dictionary<string, string>();
-
-                    for (int j = 0; j < strings; j++)
-                    {
-                        string key = obj.Packet.ReadString();
-                        string value = obj.Packet.ReadString();
-
-                        item.keyValue.Add(key, value);
-                    }
-                }
-
-                else if (extraDataType == 2) // String array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StringArrayStuffData.as
-                {
-                    int strings = obj.Packet.ReadInteger();
-                    item.strings = new List<String>();
-
-                    for (int j = 0; j < strings; j++)
-                    {
-                        string str = obj.Packet.ReadString();
-                        item.strings.Add(str);
-                    }
-                }
-
-                else if (extraDataType == 3) //VoteResult //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/VoteResultStuffData.as#L20
-                {
-                    string state = obj.Packet.ReadString();
-                    item.state = state;
-
-                    int result = obj.Packet.ReadInteger();
-                    item.result = result;
-                }
-
-                else if (extraDataType == 4) { } //Empty //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/EmptyStuffData.as#L10
-
-                else if (extraDataType == 5) // Integer array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/IntArrayStuffData.as#L22
-                {
-                    int integers = obj.Packet.ReadInteger();
-                    item.ints = new List<int>();
-
-                    for (int j = 0; j < integers; j++)
-                    {
-                        int number = obj.Packet.ReadInteger();
-                        item.ints.Add(number);
-                    }
-                }
-
-                else if (extraDataType == 6) //high score //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/HighScoreStuffData.as
-                {
-                    item.state = obj.Packet.ReadString();
-                    item.scoretype = obj.Packet.ReadInteger();
-                    item.clearType = obj.Packet.ReadInteger();
-
-                    int amountScores = obj.Packet.ReadInteger();
-                    item.scores = new List<dynamic>();
-
-                    for (int k = 0; k < amountScores; k++)
-                    {
-                        dynamic scoreData = new ExpandoObject();
-                        Log("Score #" + k);
-
-                        scoreData.score = obj.Packet.ReadInteger();
-
-                        int amountUsers = obj.Packet.ReadInteger();
-                        scoreData.users = new List<String>();
-
-                        for (int l = 0; l < amountUsers; l++)
+                        for (int j = 0; j < strings; j++)
                         {
-                            string username = obj.Packet.ReadString();
-                            scoreData.users.Add(username);
+                            item.keyValue.Add(obj.Packet.ReadString(), obj.Packet.ReadString());
                         }
-                        
-                        itemData.scores.Add(scoreData);
-                    }
+                        break;
+                    case 2: // String array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/StringArrayStuffData.as
+                        int strings = obj.Packet.ReadInteger();
+                        item.strings = new List<String>();
+
+                        for (int j = 0; j < strings; j++)
+                        {
+                            item.strings.Add(obj.Packet.ReadString());
+                        }
+                        break;
+                    case 3: //VoteResult //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/VoteResultStuffData.as#L20
+                        item.state = obj.Packet.ReadString();
+                        item.result = obj.Packet.ReadInteger();
+                        break;
+                    case 4: //Empty //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/EmptyStuffData.as#L10
+                        break;
+                    case 5: // Integer array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/IntArrayStuffData.as#L22
+                        int integers = obj.Packet.ReadInteger();
+                        item.ints = new List<int>();
+
+                        for (int j = 0; j < integers; j++)
+                        {
+                            item.ints.Add(obj.Packet.ReadInteger());
+                        }
+                        break;
+                    case 6: //high score //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/HighScoreStuffData.as
+                        item.state = obj.Packet.ReadString();
+                        item.scoretype = obj.Packet.ReadInteger();
+                        item.clearType = obj.Packet.ReadInteger();
+
+                        int amountScores = obj.Packet.ReadInteger();
+                        item.scores = new List<dynamic>();
+
+                        for (int k = 0; k < amountScores; k++)
+                        {
+                            dynamic scoreData = new ExpandoObject();
+
+                            scoreData.score = obj.Packet.ReadInteger();
+
+                            int amountUsers = obj.Packet.ReadInteger();
+                            scoreData.users = new List<String>();
+
+                            for (int l = 0; l < amountUsers; l++)
+                            {
+                                scoreData.users.Add(obj.Packet.ReadString());
+                            }
+
+                            itemData.scores.Add(scoreData);
+                        }
+                        break;
+                    case 7: //crackable
+                        item.state = obj.Packet.ReadString();
+                        item.hits = obj.Packet.ReadInteger();
+                        item.target = obj.Packet.ReadInteger();
+                        break;
+                    default:
+                        throw new NotImplementedException("item.data of item " + item.id + " is " + item.data + " and its interpretation is undefined.");
                 }
-
-                else if (extraDataType == 7) //crackable
-                {
-                    item.state = obj.Packet.ReadString();
-
-                    item.hits = obj.Packet.ReadInteger();
-
-                    item.target = obj.Packet.ReadInteger();
-                }
-
-                else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and its interpretation is undefined.");
 
                 if (LTD)
                 {
@@ -254,20 +214,15 @@ namespace PublikFurni
                     item.uniqueSeriesSize = obj.Packet.ReadInteger();
                 }
 
-                // More junk
-                int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
-                item.rentTimeSecondsLeft = rentTimeSecondsLeft;
+                item.rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/enums/RoomWidgetFurniInfoUsagePolicyEnum.as
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as#L506
                 //int infostand text           opens on click
                 //<0  infostand.button.buy,    catalog page
                 //>=0 infostand.button.buyout  buy window directly
 
-                int amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
-                item.amountOfStates = amountOfStates;
-
-                int ownerId = obj.Packet.ReadInteger();
-                item.ownerId = ownerId; //Furniture owner ID
+                item.amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
+                item.ownerId = obj.Packet.ReadInteger(); //Furniture owner ID
 
                 itemData.items.Add(item);
             }
