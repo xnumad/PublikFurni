@@ -142,10 +142,10 @@ namespace PublikFurni
                         item.state = obj.Packet.ReadString();
                         break;
                     case 1: // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
-                        int strings = obj.Packet.ReadInteger();
+                        int pairs = obj.Packet.ReadInteger();
                         item.keyValue = new Dictionary<string, string>();
 
-                        for (int j = 0; j < strings; j++)
+                        for (int j = 0; j < pairs; j++)
                         {
                             item.keyValue.Add(obj.Packet.ReadString(), obj.Packet.ReadString());
                         }
