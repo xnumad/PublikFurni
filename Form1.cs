@@ -106,42 +106,32 @@ namespace PublikFurni
             for (int i = 0; i < items; i++)
             {
                 dynamic item = new ExpandoObject();
-                Log("Item #" + i);
 
                 int itemId = obj.Packet.ReadInteger();
-                Log("Item #" + i + ".id=" + itemId);
                 item.id = itemId;
 
                 int spriteId = obj.Packet.ReadInteger();
-                Log("Item #" + i + ".spriteId=" + spriteId);
                 item.spriteId = spriteId;
 
                 int x = obj.Packet.ReadInteger(); // X
-                Log("Item #" + i + ".x=" + x);
                 item.x = x;
 
                 int y = obj.Packet.ReadInteger(); // Y
-                Log("Item #" + i + ".y=" + y);
                 item.y = y;
 
                 int rotation = obj.Packet.ReadInteger(); // Rotation //Direction
-                Log("Item #" + i + ".rotation=" + rotation);
                 item.rotation = rotation;
 
                 string height = obj.Packet.ReadString(); // Height
-                Log("Item #" + i + ".height=" + height);
                 item.height = height; //z position = furniture placement
 
                 string sizeZ = obj.Packet.ReadString();
-                Log("Item #" + i + ".sizeZ=" + sizeZ);
                 item.sizeZ = sizeZ; //z dimensions = furniture height
 
                 int extraDataPerspective = obj.Packet.ReadInteger();//_local_3._SafeStr_6897 = k._SafeStr_5432();
-                Log("Item #" + i + ".extraDataPerspective=" + extraDataPerspective);
                 item.extraDataVariable = extraDataPerspective;
 
                 int extraDataType = obj.Packet.ReadInteger();//var _local_2:int = k._SafeStr_5432
-                Log("Item #" + i + ".extraDataType=" + extraDataType);
                 item.extraDataId = extraDataType;
 
                 //4 hex nibbles store 2 values:
@@ -166,22 +156,18 @@ namespace PublikFurni
                 if (extraDataType == 0) // String //Legacy //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/LegacyStuffData.as#L15
                 {
                     string extraDataString = obj.Packet.ReadString();
-                    Log("Item #" + i + ".extraDataString=" + extraDataString);
                     item.extraDataString = extraDataString;
                 }
 
                 else if (extraDataType == 1) // Key value //Map //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/MapStuffData.as#L28
                 {
                     int strings = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".strings[].length=" + strings);
                     item.keyValue = new Dictionary<string, string>();
 
                     for (int j = 0; j < strings; j++)
                     {
                         string key = obj.Packet.ReadString();
-                        Log("Item #" + i + ".strings[" + j + "].key=" + key);
                         string value = obj.Packet.ReadString();
-                        Log("Item #" + i + ".strings[" + j + "].value=" + value);
 
                         item.keyValue.Add(key, value);
                     }
@@ -191,12 +177,10 @@ namespace PublikFurni
                 {
                     int strings = obj.Packet.ReadInteger();
                     item.strings = new List<String>();
-                    Log("Item #" + i + ".strings[].length=" + strings);
 
                     for (int j = 0; j < strings; j++)
                     {
                         string str = obj.Packet.ReadString();
-                        Log("Item #" + i + ".strings[" + j + "]=" + str);
                         item.strings.Add(str);
                     }
                 }
@@ -204,11 +188,9 @@ namespace PublikFurni
                 else if (extraDataType == 3) //VoteResult //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/VoteResultStuffData.as#L20
                 {
                     string state = obj.Packet.ReadString();
-                    Log("Item #" + i + ".state=" + state);
                     item.state = state;
 
                     int result = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".result=" + result);
                     item.result = result;
                 }
 
@@ -217,13 +199,11 @@ namespace PublikFurni
                 else if (extraDataType == 5) // Integer array //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/room/object/data/IntArrayStuffData.as#L22
                 {
                     int integers = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".integers[].length=" + integers);
                     item.ints = new List<int>();
 
                     for (int j = 0; j < integers; j++)
                     {
                         int number = obj.Packet.ReadInteger();
-                        Log("Item #" + i + ".integers[" + j + "]=" + number);
                         item.ints.Add(number);
                     }
                 }
@@ -235,7 +215,6 @@ namespace PublikFurni
                     item.clearType = obj.Packet.ReadInteger();
 
                     int amountScores = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".scores[].length=" + amountScores);
                     item.scores = new List<dynamic>();
 
                     for (int k = 0; k < amountScores; k++)
@@ -244,16 +223,13 @@ namespace PublikFurni
                         Log("Score #" + k);
 
                         scoreData.score = obj.Packet.ReadInteger();
-                        Log("Score #" + k + ".score=" + scoreData.score);
 
                         int amountUsers = obj.Packet.ReadInteger();
-                        Log("Score #" + k + ".players=" + amountUsers);
                         scoreData.users = new List<String>();
 
                         for (int l = 0; l < amountUsers; l++)
                         {
                             string username = obj.Packet.ReadString();
-                            Log("Score #" + k + ".players[" + l + "]=" + username);
                             scoreData.users.Add(username);
                         }
                         
@@ -264,13 +240,10 @@ namespace PublikFurni
                 else if (extraDataType == 7) //crackable
                 {
                     item.state = obj.Packet.ReadString();
-                    Log("Item #" + i + ".state=" + item.state);
 
                     item.hits = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".hits=" + item.hits);
 
                     item.target = obj.Packet.ReadInteger();
-                    Log("Item #" + i + ".target=" + item.target);
                 }
 
                 else MessageBox.Show("Sorry, extraDataType of item " + itemId + " is " + extraDataType + " and its interpretation is undefined.");
@@ -284,7 +257,6 @@ namespace PublikFurni
                 // More junk
                 int rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
                 item.rentTimeSecondsLeft = rentTimeSecondsLeft;
-                Log("Item #" + i + ".rentTimeSecondsLeft=" +rentTimeSecondsLeft);
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/enums/RoomWidgetFurniInfoUsagePolicyEnum.as
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as#L506
                 //int infostand text           opens on click
@@ -293,10 +265,8 @@ namespace PublikFurni
 
                 int amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
                 item.amountOfStates = amountOfStates;
-                Log("Item #" + i + ".amountOfStates=" + amountOfStates);
 
                 int ownerId = obj.Packet.ReadInteger();
-                Log("Item #" + i + ".ownerId=" + ownerId);
                 item.ownerId = ownerId; //Furniture owner ID
 
                 itemData.items.Add(item);
