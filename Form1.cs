@@ -205,7 +205,7 @@ namespace PublikFurni
                         item.target = obj.Packet.ReadInteger();
                         break;
                     default:
-                        throw new NotImplementedException("item.data of item " + item.id + " is " + item.data + " and its interpretation is undefined.");
+                        throw new NotImplementedException("item.data of item " + item.id + " is " + item.data + " and its interpretation is undefined and the packet can't be read any further from here on.");
                 }
 
                 if (LTD)
