@@ -215,13 +215,12 @@ namespace PublikFurni
                 }
 
                 item.rentTimeSecondsLeft = obj.Packet.ReadInteger(); //rent time in seconds, or -1
-                //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/enums/RoomWidgetFurniInfoUsagePolicyEnum.as
                 //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/infostand/InfoStandFurniView.as#L506
                 //int infostand text           opens on click
                 //<0  infostand.button.buy,    catalog page
                 //>=0 infostand.button.buyout  buy window directly
 
-                item.amountOfStates = obj.Packet.ReadInteger(); //amount of states furni has. infostand shows use button in info, if 1 or 2
+                item.usagePolicy = obj.Packet.ReadInteger(); //https://github.com/JasonWibbo/HabboSwfOpenSource/blob/master/src/com/sulake/habbo/ui/widget/enums/RoomWidgetFurniInfoUsagePolicyEnum.as
                 item.ownerId = obj.Packet.ReadInteger(); //Furniture owner ID
 
                 itemData.items.Add(item);
