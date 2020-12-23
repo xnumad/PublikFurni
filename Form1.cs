@@ -229,7 +229,10 @@ namespace PublikFurni
             Log("Finished with all items");
             var json = JsonConvert.SerializeObject(itemData);
             Log("Finished converting data to JSON");
-            File.WriteAllText(/*Hotel.ToDomain() + */this.CurrentRoomId + "-" + this.CurrentRoomName + ".json", json); //fails if Tanji doesn't know the current hotel
+            var path = Hotel.ToDomain() + this.CurrentRoomId + "-" + this.CurrentRoomName + ".json";
+
+            Log($"Path: {path}");
+            File.WriteAllText(MakeValidFileName(path), json); //fails if Tanji doesn't know the current hotel
             Log("Finished writing JSON file");
         }
 
@@ -237,6 +240,14 @@ namespace PublikFurni
         {
             File.AppendAllText("publik-furni.log.txt", text.ToString() + Environment.NewLine);
             //ThreadHelperClass.SetText(this, this.textBox1, this.textBox1.Text + "[" + DateTime.Now + "] " + text.ToString() + Environment.NewLine);
+        }
+
+        private static string MakeValidFileName(string name) //https://stackoverflow.com/a/847251
+        {
+            string invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
+            string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
+
+            return System.Text.RegularExpressions.Regex.Replace(name, invalidRegStr, "_");
         }
     }
 
